@@ -1,0 +1,41 @@
+var express = require('express');
+var app = express();
+
+app.get('/', function (req, res) {
+   
+    var sql = require("mssql");
+
+    // config for your database
+    var config = {
+        user: 'sa',
+        password: 'mypassword',
+        server: 'localhost', 
+        database: 'SchoolDB' 
+    };
+
+    // connect to your database
+    sql.connect(config, function (err) {
+    
+        if (err) console.log(err);
+
+        // create Request object
+        var request = new sql.Request();
+           
+        // query to the database and get the records
+        request.query('select * from Student', function (err, recordset) {
+            
+            if (err) console.log(err)
+
+            // send records as a response
+            res.send(recordset);
+            
+        });
+    });
+});
+
+var server = app.listen(5000, function () {
+    console.log('Server is running..');
+});
+In the above example, we have imported mssql module and called connect() method to connect with our SchoolDB database. We have passed config object which includes database information such as userName, password, database server and database name. On successful connection with the database, use sql.request object to execute query to any database table and fetch the records.
+
+Run the above example using node server.js command and point your browser to http://localhost:5000 which displays an array of all students from Student table.
